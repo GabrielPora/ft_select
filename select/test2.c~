@@ -1,0 +1,13 @@
+#include "ft_select.h"
+
+t_select *tmp2;
+
+int main()
+{
+  t_select sl;
+
+  sl.max_row = 5;
+  tmp2 = &sl;
+  tmp2->max_row = 4;
+  printf("%d", sl.max_row);
+}
