@@ -1,11 +1,16 @@
-void sig_window(int signo)
+#include "ft_select.h"
+
+void sig_cont(int signo)
 {
-  signo = SIGWINCH ? print_arg(void) : 0;
-  signo = SIGWINCH ? 
+  if (signo == SIGCONT)
+    {
+      term_set(&(tmp->term));
+    }
 }
 
-void signal_handler(void)
+void sig_winch(int signo)
 {
-  signal(SIGWINCH, sig_window);
-  signal(SIG
+  if (signo == SIGWINCH)
+      window_resize(select_tmp);
+  print_list(*select_tmp);
 }

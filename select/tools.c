@@ -40,6 +40,7 @@ int get_column(int argc, struct winsize *ws)
   ioctl(0, TIOCGWINSZ, ws);
   if (ws->ws_row >= argc)
     return (1);
+  ws->ws_row -= 1;
   col = argc / ws->ws_row;
   if (argc % ws->ws_row > 0)
     col++;

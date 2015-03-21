@@ -14,25 +14,16 @@ int term_set(struct termios *term)
 int     voir_touche(t_select *sl)
 {
   char     buffer[3];
-  t_pos pos;
   char *res;
 
-  pos.x = 0;
-  pos.y = 0;
-  put_command("cl", 0);
   print_list(*sl);
   while (1)
     {
       bzero(buffer, 3);
       read(0, buffer, 3);
       if (buffer[0] == 27)
-	printf("key %d %d %d\n", buffer[0], buffer[1], buffer[2]);
-      else if (buffer[0] == 4)
-	{
-	  printf("Ctlr+d, on quitte !\n");
-	  return (0);
-	}
-      tmp = sl;
+	direction_key(sl, buffer[2]);
+      print_list(*sl);
     }
   return (0);
 }
@@ -68,12 +59,7 @@ int main(int argc, char **argv, char **env)
   if (sl.lc == NULL)
     return (exit_select(&term));
   tmp = &sl;
-  /*  while (sl.lc != NULL)
-    {
-      printf("%s  ", sl.lc->name);
-      sl.lc = sl.lc->next;
-    }
-    printf("\n");*/
+  sl.lc->indice = 1;
   voir_touche(&sl);
   return (exit_select(&term));
 }

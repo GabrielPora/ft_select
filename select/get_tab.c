@@ -1,39 +1,62 @@
-t_list ***get_tab(int argc, char **argv, int max_row, int max_col)
+#include "ft_select.h"
+
+void get_tab(t_list *tb[][], t_list *lc)
 {
-  t_list ***tb;
   int i;
   int j;
 
-  tb = (t_list***)malloc(sizeof(t_list**) * max_col + 1);
   i = 0;
-  while (i < max_col)
+  while (i < sl.max_col)
     {
-      tb[i] = (t_list**)malloc(sizeof(t_list*) * max_row + 1);
       j = 0;
-      while (j < max_row)
+      while (*argv && j < sl.max_row)
 	{
-	  tb[i][j] = (t_list*)malloc(sizeof(t_list));
-	  tb[i][j]->name = *argv;
-	  tb[i][j]->len = ft_strlen(*argv);
-	  tb[i][j]->indice = 0;
-	  j++;
-	  argv++;
+	  tb[]
 	}
-      tb[i][j] = NULL;
-      i++;
     }
-  tb[i] = NULL;
 }
 
 void get_space_number(t_select *sl)
 {
   int i;
   int j;
-  int k;
+  int max;
 
   i = 0;
-  while (
+  while (i < sl->max_col)
+    {
+      j = 0;
+      max = 0;
+      while (sl->tb[i][j] && j < sl->max_row)
+	{
+	  if (sl->tb[i][j]->len > max)
+	    max = sl->tb[i][j]->len;
+	  j++;
+	}
+      sl->sp[i] = max;
+      i++;
+    }
 }
+
+t_list *get_lc(char **argv)
+{
+  t_list *tmp;
+  t_list *lc;
+
+  lc = NULL;
+  while (*argv)
+    {
+      tmp = (t_list*)malloc(sizeof(t_list));
+      tmp->name = *argv;
+      tmp->len = strlen(*argv);
+      tmp->indice = 0;
+      tmp->next = NULL;
+      add_end(&lc, tmp);
+      argv++;
+    }
+  return (lc);
+}
+
 t_select get_line_colum(int argc, char **argv)
 {
   t_select sl;
@@ -41,14 +64,27 @@ t_select get_line_colum(int argc, char **argv)
 
   if ((sl.max_col = get_column(argc, &ws)) == 0)
     {
-      sl.lc = NULL;
+      sl.tb = NULL;
       return (sl);
     }
   sl.max_row = ws.ws_row;
   sl.col_len = ws.ws_col;
-  list.argc = argc;
-  sl.tb = get_tab(argc, argv, list.max_row, list.max_col);
-  sl.sp = (int*)malloc(sizoef(int) * sl.col_len);
+  sl.argc = argc;
+  sl.lc = get_lc(argv);
+    //  get_tab(sl.tb, lc);
+  printf("%d %d %d\n", sl.max_row, sl.col_len, sl.max_col);
+  sl.sp = (int*)malloc(sizeof(int) * sl.col_len);
   get_space_number(&sl);
-  check_window_size(list);
+  return (sl);
+}
+
+int main(int argc, char **argv)
+{
+  t_select sl;
+  int i = 0;
+  int j = 0;
+  int k;
+
+  sl = get_line_colum(argc - 1, argv + 1);
+
 }

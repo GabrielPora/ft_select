@@ -45,9 +45,8 @@ void window_resize(t_select *sl)
     }
 }
 
-void sig_winch(void)
+void sig_winch(int signo)
 {
-  window_resize(&tmp);
-  put_command("cl", 0);
-  print(tmp);
+  if (signo == SIGWINCH)
+      window_resize(tmp);
 }

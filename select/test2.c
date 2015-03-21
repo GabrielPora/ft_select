@@ -1,16 +1,11 @@
 #include "ft_select.h"
 
-t_select *tmp2;
-
 int main(int argc, char **argv)
 {
-  int tableau[argc - 1];
-  int i = 0;
+  char *buffer;
+  int fd_tty;
 
-  while (i < argc -1)
-    {
-      tableau[i] = 5;
-      printf("%d\n", tableau[i]);
-      i++;
-    }
+  printf("%lU\n", strlen("\033[31;1m"));
+  buffer = "\033[31;1mrouge en gras \033[0m normal";
+  write(1, buffer, strlen(buffer));
 }

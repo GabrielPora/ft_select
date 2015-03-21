@@ -1,0 +1,14 @@
+void select_arg(t_select *sl)
+{
+  t_list *tmp;
+
+  tmp = sl.lc;
+  while (tmp != NULL)
+    {
+      if (tmp->indice & CURSOR)
+	break ;
+      tmp = tmp->next;
+    }
+  tmp->indice += 1;
+  tmp->next->indice += 1;
+}

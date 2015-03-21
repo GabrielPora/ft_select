@@ -1,13 +1,10 @@
 #include "ft_select.h"
 
-t_select *tmp2;
-
-int main()
+int main(int argc, char **argv)
 {
-  t_select sl;
+  char *buffer;
+  int fd_tty;
 
-  sl.max_row = 5;
-  tmp2 = &sl;
-  tmp2->max_row = 4;
-  printf("%d", sl.max_row);
+  buffer = "\033[31;1mrouge en gras \033[0m normal";
+  write(1, buffer, strlen(buffer));
 }

@@ -25,32 +25,20 @@ void window_resize(t_select *sl)
 {
   struct winsize ws;
   t_list *tmp;
-  int row;
-  int col;
+  t_pos size;
 
   sl->max_col = get_column(sl->argc, &ws);
   sl->max_row = ws.ws_row;
   sl->col_len = ws.ws_col;
   tmp = sl->lc;
-  while (row < sl->max_row)
+  size.row = 0;
+  while (col < sl->max_col)
     {
-      col = 0;
-      while (col < sl->max_col && row + sl->max_row * col < sl->argc)
-	{
-	  tmp->row = row;
-	  tmp->col = col;
-	  col++;
-	}
+      size.col = 0;
+      tmp->row = row;
+      tmp->col = col;
       row++;
     }
-}
-
-void sig_winch(int signo)
-{
-  if (signo == SIGWINCH)
-    {
-      window_resize(tmp);
-      put_command("cl", 0);
-      print_list(*tmp);
+      row++;
     }
 }

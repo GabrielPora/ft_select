@@ -53,24 +53,47 @@ void get_sp(t_select *sl)
     }
 }
 
+void last_col(t_select sl, int *row, int *col)
+{
+  t_list *tmp;
+
+  tmp = sl.lc;
+  while (tmp->next != NULL)
+    {
+      if (tmp->col == sl.max_col - 2 && tmp->next->col == 0)
+	break ;
+      tmp = tmp->next;
+    }
+  if (tmp->next == NULL)
+    {
+      *row = tmp->row;
+      *col = tmp->col;
+      return ;
+    }
+  *row = tmp->row - 1;
+  *col = tmp->col + 1;
+}
+
 t_select init_list(int argc, char **argv)
 {
   t_select list;
   struct winsize ws;
 
+  if ((list.max_col = get_column(argc, &ws)) == 0)
+    {
+      list.lc = NULL;
+      return (list);
+    }
   list.max_row = ws.ws_row;
   list.col_len = ws.ws_col;
   list.argc = argc;
   list.lc = get_list(argc, argv, list.max_row, list.max_col);
   list.sp = (int*)malloc(sizeof(int) * list.max_col + 1);
+  list.fd_tty = open("/dev/tty", O_RDWR);
   get_sp(&list);
-  int i = 0;
-  while (i < list.max_col)
-    {
-      printf("%d\n", list.sp[i]);
-      i++;
-    }
   check_window_size(list);
+  last_col(list, &list.l_row, &list.l_col);
+  printf("%d %d\n", list.l_row, list.l_col);
   return (list);
 }
 /*
@@ -80,13 +103,6 @@ int main(int argc, char **argv)
   int i = 0;
   int max = 0;
   sl = init_list(argc - 1, argv + 1);
-  while (sl.lc != NULL)
-    {
-      //      printf("%s %d %d\n", sl.lc->name, sl.lc->row, sl.lc->col);
-      if (sl.lc->col == 0)
-      	max = sl.lc->len > max ? sl.lc->len : max;
-      sl.lc = sl.lc->next;
-    }
-  printf("max : %d\n", max);
-  //  print_list(sl);
-  }*/
+  print_list(sl);
+}
+*/

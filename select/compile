@@ -1,1 +1,1 @@
-gcc test.c list.c window.c tools.c prin.c -lncurses
+gcc test.c list.c window.c tools.c prin.c -lncurses dir_key.c signal.c select.c
