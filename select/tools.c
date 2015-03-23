@@ -38,11 +38,22 @@ int get_column(int argc, struct winsize *ws)
   if (argc == 0)
     return (0);
   ioctl(0, TIOCGWINSZ, ws);
+  ws->ws_row -= 3;
   if (ws->ws_row >= argc)
     return (1);
-  ws->ws_row -= 1;
   col = argc / ws->ws_row;
   if (argc % ws->ws_row > 0)
     col++;
   return (col);
+}
+
+int ft_search_str(char *name, char *s)
+{
+  int i;
+  int len;
+
+  len = strlen(s);
+  if (!strncmp(name, s, len))
+    return (len);
+  return (0);
 }

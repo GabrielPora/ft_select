@@ -1,6 +1,6 @@
 #include "ft_select.h"
 
-void check_window_size(t_select sl)
+int check_window_size(t_select sl)
 {
   int i;
   int line_len;
@@ -15,10 +15,12 @@ void check_window_size(t_select sl)
     }
   if (line_len > sl.col_len)
     {
+      put_command("cl", 0);
       printf("window size too small.\n");
-      while (1)
-	read(0, buffer, 1);
+      return (0);
     }
+  print_list(sl);
+  return (1);
 }
 
 void window_resize(t_select *sl)
@@ -30,15 +32,10 @@ void window_resize(t_select *sl)
   sl->max_col = get_column(sl->argc, &ws);
   sl->max_row = ws.ws_row;
   sl->col_len = ws.ws_col;
-  tmp = sl->lc;
-  size.row = 0;
-  while (col < sl->max_col)
-    {
-      size.col = 0;
-      tmp->row = row;
-      tmp->col = col;
-      row++;
-    }
-      row++;
-    }
+  sl->lc = get_list(sl->argc, sl->lt, sl->max_row, sl->max_col);
+  free(sl->sp);
+  sl->sp = (int*)malloc(sizeof(int) * sl->max_col + 1);
+  get_sp(sl);
+  last_col(*sl, &(sl->l_row), &(sl->l_col));
+  sl->enable = check_window_size(*sl);
 }

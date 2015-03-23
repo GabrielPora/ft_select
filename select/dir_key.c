@@ -70,4 +70,5 @@ void direction_key(t_select *sl, int c)
     pos.col--;
   pos_gestion(&pos, sl->max_row, sl->max_col, sl);
   cursor_add(sl, pos);
+  print_list(*sl);
 }

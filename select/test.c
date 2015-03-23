@@ -6,10 +6,32 @@ int term_set(struct termios *term)
 
   term->c_lflag &= ~(ICANON);
   term->c_lflag &= ~(ECHO);
+  //  term->c_lflag &= ~(ISIG);
   term->c_cc[VMIN] = 1;
   term->c_cc[VTIME] = 0;
   if (tcsetattr(0, TCSADRAIN, term))
     return (0);
+  return (1);
+}
+
+int key_gestion(t_select *sl, char *buffer)
+{
+  if (buffer[0] == 4)
+    return (0);
+  if (buffer[0] == 27 && sl->enable & WIN_OK)
+    direction_key(sl, buffer[2]);
+  else if (buffer[0] == 32 && sl->enable & WIN_OK)
+    select_arg(sl);
+  else if (buffer[0] == 104 && sl->enable & WIN_OK)
+    put_help();
+  else if (buffer[0] == 105 && sl->enable & WIN_OK)	\
+    put_info(sl);
+  else if (buffer[0] == 115 && sl->enable & WIN_OK)
+    {
+      sl->enable += SEARCH;
+      search_list(sl);
+      print_list(*sl);
+    }
   return (1);
 }
 
@@ -23,27 +45,18 @@ int     voir_touche(t_select *sl)
     {
       bzero(buffer, 3);
       read(0, buffer, 3);
-      if (buffer[0] == 27)
-	direction_key(sl, buffer[2]);
-      else if (buffer[0] == 32)
-	select_arg(sl);
-      print_list(*sl);
-      //      printf("%d %d %d\n", buffer[0], buffer[1], buffer[2]);
+      if (!key_gestion(sl, buffer))
+	return (0);
     }
   return (0);
 }
 
 int exit_select(struct termios *term)
 {
+  tcgetattr(0, term);
   term->c_lflag = (ICANON | ECHO);
   tcsetattr(0, 0, term);
   return (0);
-}
-
-void signal_handler(void)
-{
-  signal(SIGWINCH, sig_winch);
-  signal(SIGCONT, sig_cont);
 }
 
 int main(int argc, char **argv, char **env)
@@ -51,6 +64,7 @@ int main(int argc, char **argv, char **env)
   t_select sl;
   struct termios term;
   char *name;
+  char buff[2];
 
   if ((name = getenv("TERM")) == NULL)
    return (0);
@@ -66,8 +80,8 @@ int main(int argc, char **argv, char **env)
   sl.term = term;
   if (sl.lc == NULL)
     return (exit_select(&term));
-  tmp = &sl;
+  select_tmp = &sl;
   sl.lc->indice = 1;
   voir_touche(&sl);
-  return (exit_select(&term));
+  return (0);
 }
