@@ -1,6 +1,6 @@
 # ft_select
 
-42 ft_selct
+42 ft_select
 
 To compile, "make"
 
